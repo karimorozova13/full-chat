@@ -1,16 +1,15 @@
-"use client";
-
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
-const Form = () => {
+const Form = ({ socket }) => {
   const [userName, setUserName] = useState("");
-  // const router = useRouter();
+  const router = useRouter();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    localStorage.setItem("userName", userName);
-    router.push("/chat");
+    sessionStorage.setItem("userName", userName);
+    socket.emit("newUser", { userName, socketID: socket.id });
+    router.push(`/chat/${socket.id}`);
   };
   return (
     <form className="home__container" onSubmit={handleSubmit}>

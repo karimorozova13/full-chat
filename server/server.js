@@ -20,37 +20,32 @@ app.use(
     origin: "http://localhost:3000",
   })
 );
+let users = [];
+let messages = [];
 
-// const socketIO = new Server(http, {
-//   cors: {
-//   origin: "http://localhost:3000",
-//   },
-// });
 io.on("connection", (socket) => {
   console.log(`⚡: ${socket.id} user just connected!`);
+  socket.on("users", () => {
+    io.emit("usersResponse", users);
+  });
+  socket.on("messages", () => {
+    io.emit("messagesResponse", messages);
+  });
+  socket.on("message", (data) => {
+    messages.push(data);
+    io.emit("messageResponse", data);
+  });
+  socket.on("newUser", (data) => {
+    users.push(data);
+    io.emit("newUserResponse", users);
+  });
   socket.on("disconnect", () => {
     console.log("🔥: A user disconnected");
+    users = users.filter((user) => user.socketID !== socket.id);
+    io.emit("newUserResponse", users);
+    socket.disconnect();
   });
 });
 server.listen(PORT || 8081, () => {
   console.log("Server is running");
 });
-
-// socketIO.on("connection", (socket) => {
-//   console.log(`⚡: ${socket.id} user just connected!`);
-//   socket.on("disconnect", () => {
-//     console.log("🔥: A user disconnected");
-//   });
-// });
-
-console.log("socketIO");
-
-// app.get("/api", (req, res) => {
-//   res.json({
-//     message: "Hello world",
-//   });
-// });
-
-// app.listen(PORT, () => {
-//   console.log(`Server listening on ${PORT}`);
-// });

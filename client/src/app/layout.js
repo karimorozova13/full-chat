@@ -8,10 +8,13 @@ export const metadata = {
   description: "Created by Kari Morozova",
 };
 
-export default function RootLayout({ children }) {
+export default function RootLayout({ children, chat }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        {children}
+        {chat}
+      </body>
     </html>
   );
 }

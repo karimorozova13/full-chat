@@ -14,7 +14,10 @@ const io = new Server(server, {
 require("dotenv").config();
 
 const { PORT = 8081 } = process.env;
-
+const fs = require("fs");
+const rawData = fs.readFileSync("messages.json");
+const messagesData = JSON.parse(rawData);
+console.log(messagesData);
 app.use(
   cors({
     origin: "http://localhost:3000",
@@ -35,6 +38,7 @@ io.on("connection", (socket) => {
     messages.push(data);
     io.emit("messageResponse", data);
   });
+  socket.on("typing", (data) => socket.broadcast.emit("typingResponse", data));
   socket.on("newUser", (data) => {
     users.push(data);
     io.emit("newUserResponse", users);

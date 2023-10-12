@@ -1,7 +1,7 @@
 import React from "react";
 import { usePathname, useRouter } from "next/navigation";
 
-const ChatBody = ({ messages }) => {
+const ChatBody = ({ messages, lastMessageRef, typingStatus }) => {
   const router = useRouter();
   const pathname = usePathname();
   const id = pathname.split("/")[2];
@@ -21,7 +21,6 @@ const ChatBody = ({ messages }) => {
         </button>
       </header>
 
-      {/*This shows messages sent from you*/}
       <div className="message__container">
         {messages.map((message) =>
           message.socketID === id ? (
@@ -40,10 +39,10 @@ const ChatBody = ({ messages }) => {
             </div>
           )
         )}
+        <div ref={lastMessageRef} />
 
-        {/*This is triggered when a user is typing*/}
         <div className="message__status">
-          <p>Someone is typing...</p>
+          <p>{typingStatus}</p>
         </div>
       </div>
     </>
